@@ -8,17 +8,30 @@ from classchar import *
 from classman import *
 from random import randint
 
+#from pyglet import image
+pic = pyglet.image.load('zoombie_dead.png')
+
+#dead_zombie_sprite = cocos.sprite.Sprite('zoombie_dead.png')
+
+
 def Zombiing(scene,victim):
 	if not getattr(scene,'zoombies',False):
 		scene.zoombies = []
 	z = Zoombie()
-	z.position = randint(-10,500),randint(10,20)*-1
-	#z.scale = randint(2,5)/10
-	z.scale = 0.2
+	
+	probaly_pos = (
+					(650, randint(0,480)),
+					(randint(0,480), 500),
+					(-10, randint(0,480)),
+					(randint(0,480), -10))
+	pos = probaly_pos[randint(0,3)]
+	z.position = pos[0],pos[1]
+	#z.scale = float(randint(15,30))/100
+	z.scale = 1
 	z.victim = victim
 	z.hunt()
 	scene.zoombies.append(z)
-	scene.add(z)
+	scene.add(z,2)
 	scene.collision_manager.add(z)
 	
 	
@@ -29,7 +42,26 @@ class Zoombie(Char):
 		self.victim = False
 		self.position = 220,240
 		self.speed = 1
+		self.stepping_aside = False
 		#self.shape.collision_type=2
+	
+	def move(self, some):
+		to_step = False
+		if self.parent.collision_manager.objs_colliding(self):
+			for i in self.parent.collision_manager.objs_colliding(self):
+				if i!=self and isinstance(i,Zoombie):
+					to_step = True
+					break
+		if (to_step): self.step_aside(i)
+		else: Char.move(self,some)
+		#else: pass
+	
+	def step_aside(self,obj):
+			self.stepping_aside = True
+			x = (self.position[0]-obj.position[0])
+			y = (self.position[1]-obj.position[1])
+			self.do(MoveBy((x,y),2))
+			self.update_cshape()
 	
 	def hit(self, target):		
 		target.hurt()
@@ -42,9 +74,12 @@ class Zoombie(Char):
 			#self.look_to_victim(False)
 	
 	def die(self):
-		
-		for i in range((randint(1,2))):
-			Zombiing(self.parent,self.victim)
+		self.parent.score_text.element.text=str(int(self.parent.score_text.element.text)+1)
+		self.unschedule(self.look_to_victim)
+		self.parent.add(cocos.sprite.Sprite(pic,self.position,randint(1,360),5,100),1)
+		#self.image = pyglet.image.load('zoombie_dead.png')
+		#for i in range((randint(1,2))):
+		Zombiing(self.parent,self.victim)
 		Char.die(self)
 		
 		
