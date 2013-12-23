@@ -204,12 +204,12 @@ class SpeedupBonus(Bonus):
 		Bonus.__init__(self,scene)		
 		
 	def effect(self,obj):
-			obj.speed+=40
-			self.schedule_interval(self.uneffect,50,obj)
+			obj.speed+=10
+			self.schedule_interval(self.uneffect,15,obj)
 			self.scene.remove(self)
 
 	def uneffect(self,obj,*args):
-			obj.speed-=40
+			obj.speed-=10
 			self.unsheldule(self.uneffect)		
 
 #class bonusBox(object):

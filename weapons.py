@@ -23,9 +23,14 @@ class Shotgun(Weapon):
 		Weapon.__init__(self,owner)
 	
 	def shoot(self,*args):
+		if self.owner.weapon == self:
+			pass
+		else:
+			self.owner.parent.unschedule(self.shoot)
+			
 		if self.can_shoot:
 			for _ in xrange(10):
-				self.owner.parent.add(Bullet(self.owner,shuffle=100),1)
+				self.owner.parent.add(Bullet(self.owner,shuffle=10),1)
 			self.can_shoot = False
 			self.owner.parent.schedule_interval(self.enable_shoot,self.weapon_speed)
 			
@@ -37,6 +42,11 @@ class Uzi(Weapon):
 		
 		
 	def shoot(self,*args):
+		if self.owner.weapon == self:
+			pass
+		else:
+			self.owner.parent.unschedule(self.shoot)
+		
 		if self.can_shoot:
 			self.owner.parent.add(Bullet(self.owner,speed=2,shuffle=5,damage=self.damage),1)
 			self.sound_effect()

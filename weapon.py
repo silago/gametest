@@ -19,7 +19,8 @@ class Weapon(object):
 		self.speed = 1
 		self.can_shoot = True
 		self.weapon_speed = 2
-		self.fire = cocos.sprite.Sprite('fire.png',(0,0),150,1,0)
+		self.fire = cocos.sprite.Sprite('fire.png',(0,0),150,1)
+		self.fire.do(Hide())
 		self.owner.add(self.fire)
 		self.sound = cocos.audio.pygame.mixer.Sound('sounds/shoot.wav')
 			
@@ -35,11 +36,13 @@ class Weapon(object):
 		
 	def fire_effect(self):
 		self.fire.rotation = self.owner.r+180
-		self.fire.opacity = 255
+		self.fire.do(Blink(1,0.2) + Hide())
+		#self.fire.opacity = 255
 		
 	def shoot(self,*args):
 		self.sound_effect()
 		self.fire_effect()
+		self.fire_effect();
 		
 		
 		if self.can_shoot:	self.owner.parent.add(Bullet(self.owner),20)
@@ -51,7 +54,7 @@ class Weapon(object):
 		if button==1:	self.shoot()	
 		
 	def on_mouse_release(self,x,y,button,modifiers):
-		self.fire.opacity = 0
+		#self.fire.opacity = 0
 		pass
 		
 	def on_key_press(self, key):
