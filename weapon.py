@@ -16,7 +16,7 @@ class Weapon(object):
 		#print "####"
 		#print owner
 		self.distance=10
-		self.speed = 1
+		self.speed = 0.5
 		self.can_shoot = True
 		self.weapon_speed = 2
 		self.fire = cocos.sprite.Sprite('fire.png',(0,0),150,1)
@@ -28,8 +28,8 @@ class Weapon(object):
 		self.can_shoot = True
 		self.owner.parent.unschedule(self.enable_shoot)
 	
-	def sound_effect(self):
-		self.sound.play()
+	def sound_effect(self):		
+		self.sound.play(0)
 		
 	def bullet_effect(self):
 		pass

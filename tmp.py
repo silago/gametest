@@ -25,7 +25,10 @@ class L(Layer):
 #        p = Explosion()
 #        p = Fire()
 #        p = Flower()
-        p = Flower()
+        p = Explosion()
+        p.total_particles = 100
+        p.size = 100
+        p.gravity =  Point2( 0, 0)
 #        p = Spiral()
 #        p = Meteor()
 #        p = Galaxy()

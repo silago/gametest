@@ -78,8 +78,8 @@ class Zoombie(Char):
 		self.unschedule(self.look_to_victim)
 		self.parent.add(cocos.sprite.Sprite(pic,self.position,randint(1,360),5,100),1)
 		#self.image = pyglet.image.load('zoombie_dead.png')
-		#for i in range((randint(1,2))):
-		Zombiing(self.parent,self.victim)
+		for i in range((randint(1,2))):
+			Zombiing(self.parent,self.victim)
 		Char.die(self)
 		
 		

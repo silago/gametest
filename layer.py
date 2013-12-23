@@ -14,7 +14,7 @@ from cocos.particle import ParticleSystem
 from cocos.particle_systems import *
 from cocos.scenes.transitions import *
 from random import randint
-
+from weaponEffects import *
 
 
 
@@ -51,8 +51,8 @@ class Game(cocos.layer.Layer):
 							
 		self.score_text.position = 600,430
 		self.add(self.score_text,100)
-		#self.sound = cocos.audio.pygame.mixer.Sound('music.ogg')
-		#self.sound.play()
+		self.sound = cocos.audio.pygame.mixer.Sound('music.ogg')
+		self.sound.play()
 		#for i in range(randint(1,55)):
 		for i in range((6)):
 			Zombiing(self,self.man)
@@ -75,16 +75,22 @@ class Game(cocos.layer.Layer):
 		#self.came_from = 	cocos.director.director.scene
 		
 		#self.gamover()
-		self.bonuses = [UziBonus,SpeedupBonus,ShotgunBonus]
+		self.bonuses = [UziBonus,SpeedupBonus,ShotgunBonus,BombBonus]
+		#self.bonuses = [BombBonus]
 		#self.bonuses = [UziBonus]
 		self.schedule_interval(self.bonusing, 10)
-		self.add(self.bonuses[0](self),20)
+		#self.add(self.bonuses[0](self),20)
 		
 	def bonusing(self,*args):
-		i = randint(0,2)
-		bonus = self.bonuses[i](self)
-		bonus.set_position(randint(10,400),randint(10,400))
-		self.add(bonus,20)
+		#Элемент случайности
+		if (randint(0,1)>-1):
+			i = randint(0,3)
+			#i=0
+			bonus = self.bonuses[i](self)
+			bonus.set_position(randint(10,400),randint(10,400))
+			self.add(bonus,20)
+		else:
+			pass
 		
 
 	def on_mouse_motion( self, x, y, dx, dy):
@@ -188,6 +194,7 @@ class Bonus(cocos.sprite.Sprite):
 class ShotgunBonus(Bonus):
 	def __init__(self,scene):
 		Bonus.__init__(self,scene)
+		self.image = pyglet.image.load('shotgun.png')
 		
 	def effect(self,obj):
 		obj.weapon = Shotgun(obj)
@@ -195,6 +202,7 @@ class ShotgunBonus(Bonus):
 class UziBonus(Bonus):
 	def __init__(self,scene):
 		Bonus.__init__(self,scene)
+		self.image = pyglet.image.load('uzi.png')
 		
 	def effect(self,obj):
 		obj.weapon = Uzi(obj)
@@ -202,6 +210,7 @@ class UziBonus(Bonus):
 class SpeedupBonus(Bonus):
 	def __init__(self,scene):
 		Bonus.__init__(self,scene)		
+		self.image = pyglet.image.load('speed.png')
 		
 	def effect(self,obj):
 			obj.speed+=10
@@ -210,16 +219,27 @@ class SpeedupBonus(Bonus):
 
 	def uneffect(self,obj,*args):
 			obj.speed-=10
-			self.unsheldule(self.uneffect)		
-
-#class bonusBox(object):
-#		self.__init__(self):
-#			pass
+			self.unsheldule(self.uneffect)
+			
+class BombBonus(Bonus):
+	def __init__(self,scene):
+		Bonus.__init__(self,scene)		
+		self.image = pyglet.image.load('bomb.png')
+		self.scene = scene
+		self.sound = cocos.audio.pygame.mixer.Sound('sounds/bomb.wav')
+		self.radius = 200
+		self.damage = 110
 		
-		
-		#
-		#
-	
-	#def bonus(self):
-		
-		
+	def effect(self,obj):
+		self.sound.play()
+		bps = BombParticleSystem()
+		bps.position = self.position
+		self.scene.add(bps,100)
+		for i in self.scene.collision_manager.objs_into_box(self.position[0]-self.radius,self.position[0]+self.radius,self.position[1]-self.radius,self.position[1]+self.radius):
+			if isinstance(i,Zoombie):
+					i.hurt(self.damage)
+			
+	def uneffect(self,obj,*args):
+		pass
+			#obj.speed-=10
+			#self.unsheldule(self.uneffect)		
