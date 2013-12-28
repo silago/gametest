@@ -33,7 +33,7 @@ def run():
 	cocos.director.director.init(caption='game' )
 	#cocos.director.director.run( cocos.scene.Scene( Game() ) )
 	pyglet.clock.set_fps_limit(60)
-	main = cocos.scene.Scene( MainMenu() )
+	main = cocos.scene.Scene( MainMenu())
 	main.add(cocos.sprite.Sprite('bg.jpg',(320,240),0,1,30),-1)
 	cocos.director.director.run( main,)
 	

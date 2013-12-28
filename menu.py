@@ -9,7 +9,7 @@ from cocos.actions import *
 
 from cocos.scenes.transitions import *
 from random import randint
-from layer import Game
+from layer import Game, HUD
 from cocos.director import director
 		
 class TitleLayer(cocos.layer.Layer):
@@ -82,14 +82,16 @@ class MainMenu(Menu):
 		
 		s = cocos.scene.Scene()
 		l = Game()
+		#l = Game()
 		l.menu = self
 		s.add(l)
+		s.add(HUD(),z=31,name='hud')
 		
 		#director.push(cocos.scene.Scene( self))
-		director.push(FadeTransition(
+		cocos.director.director.push(FadeTransition(
 			s, 1.0))
 		
-		print cocos.director.director.scene_stack
+		#print cocos.director.director.scene_stack
 
 	def on_options( self ):
 		self.parent.switch_to(1)

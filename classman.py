@@ -40,10 +40,17 @@ class Man(Char):
 		self.weapon_sprite = cocos.sprite.Sprite('char/weapon.png')
 		self.add(self.weapon_sprite,254)
 		self.add(cocos.sprite.Sprite('char/body.png'),253)
-		
+		#self.parent.get('hud').health.element.text=str('100%')
 		
 		#self.collision_type=0
 		#self.shape.collision_type=3
+		#self.parent.parent.get('hud').health.element.text=str(self.health)+'%'
+		
+	def hurt(self,damage=False):		
+		super(Man,self).hurt(damage)
+		self.parent.parent.get('hud').health.element.text=str(self.health)+'%'
+		
+	
 	def die(self):
 		self.parent.gamover()
 	

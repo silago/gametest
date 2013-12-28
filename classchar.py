@@ -71,8 +71,7 @@ class Char(cocos.sprite.Sprite):
 				position[1]+=self.speed*cos(radians(self.rotation))				
 			#self.position = position[0],		position[1]
 			self.do(MoveTo((position[0],		position[1]),0.05))
-			#self.cshape = cm.CircleShape(eu.Vector2(self.position[0],self.position[1]), 25)
-			#self.body.position = self.position
+
 			
 			
 			#print self.position

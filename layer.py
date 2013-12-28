@@ -24,10 +24,48 @@ from weaponEffects import *
 #
 #
 
+class HUD(cocos.layer.Layer):
+	def __init__(self):
+		super(HUD, self ).__init__()
+		self.score = 0
+		self.scull = cocos.sprite.Sprite('images/scull.png')
+		self.scull.scale = 0.7
+		self.scull.position = 30,430
+		self.add(self.scull,100)
+		self.score_text = cocos.text.Label(str(self.score),	font_name='Ubuntu',	font_size=16)
+		self.score_text.position = 50,420
+		self.add(self.score_text,100)
+		
+		
+		self.heart = cocos.sprite.Sprite('images/heart.png')
+		self.heart.position = 30,390
+		self.heart.scale = 0.4
+		self.add(self.heart,100)
+		
+		self.health = cocos.text.Label('100%',	font_name='Ubuntu',	font_size=16)
+		self.health.position = 50,385
+		self.add(self.health,100)
+		
+		
+		self.weapon_icon 	= False
+		self.bullets 		= False
+		self.bonuses 		= False
+		self.level 			= False
+		
+		
+		
+
 class Game(cocos.layer.Layer):
 	is_event_handler = True 
 	def __init__(self):
 		super( Game, self ).__init__()
+		#self.score = 0
+		#self.scull
+		#self.score_text = cocos.text.Label(str(self.score),
+		#					font_name='Times New Roman',
+		#					font_size=32,
+		#					anchor_x='center', anchor_y='center')
+		
 		self.name = "game layer"
 		self.iteration=0
 		bg_image = pyglet.image.load('dirt.jpg')
@@ -38,23 +76,18 @@ class Game(cocos.layer.Layer):
 		self.add(self.man,2)
 		self.collision_manager = cm.CollisionManagerBruteForce()
 		self.collision_manager.add(self.man)
-		self.score = 0
-		self.score_text = cocos.text.Label(str(self.score),
-							font_name='Times New Roman',
-							font_size=32,
-							anchor_x='center', anchor_y='center')
+		
 							
 		#self.fps = cocos.text.Label(str(self.score),
 		#					font_name='Times New Roman',
 		#					font_size=32,
 		#					anchor_x='center', anchor_y='center')
 							
-		self.score_text.position = 600,430
-		self.add(self.score_text,100)
+		
 		self.sound = cocos.audio.pygame.mixer.Sound('music.ogg')
 		self.sound.play()
 		#for i in range(randint(1,55)):
-		for i in range((6)):
+		for i in xrange((100)):
 			Zombiing(self,self.man)
 		
 		
@@ -63,7 +96,7 @@ class Game(cocos.layer.Layer):
 		#self.add(self.prettybox,10)
 		
 		
-		self.schedule(self.run_update)
+		#self.schedule(self.run_update)
 		self.schedule_interval(self.each_second, 1)
 	
 		self.collision_rules={self.man:(Zoombie,False,"hit")}
@@ -119,29 +152,14 @@ class Game(cocos.layer.Layer):
 		self.man.on_key_release(key)
 	
 	def each_second(self,some):
-		#	for element in self.collision_rules:
-		#		for i in self.collision_manager.objs_colliding(element):
-		#			print key
-					#if isinstance(i,element[0]):
-					#	getattr(i, element[2])()
-		#cocos.director.director.show_FPS()
-		
-		
 		for i in self.collision_manager.objs_colliding(self.man):
 			if isinstance(i,Zoombie):
 				i.hit(self.man)
-			#elif isinstance(i,PrettyBox):
-			#	try:
-			#		self.man.weapon = i.holdeditem(self.man)
-			#		self.collision_manager.remove_tricky(i)
-			#		i.kill()
-			#	except:
-			#		pass
 				
 	def run_update(self,some):
 		pass
-		if getattr(cocos.director.director,'caption',False):
-			print cocos.director.director.caption
+		#if getattr(cocos.director.director,'caption',False):
+		#	print cocos.director.director.caption
 		
 	def gamover(self):
 		self.menu.restart()
@@ -235,6 +253,8 @@ class BombBonus(Bonus):
 		bps = BombParticleSystem()
 		bps.position = self.position
 		self.scene.add(bps,100)
+		#objects_in_screen = 
+		
 		for i in self.scene.collision_manager.objs_into_box(self.position[0]-self.radius,self.position[0]+self.radius,self.position[1]-self.radius,self.position[1]+self.radius):
 			if isinstance(i,Zoombie):
 					i.hurt(self.damage)

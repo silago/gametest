@@ -46,7 +46,9 @@ class Zoombie(Char):
 		#self.shape.collision_type=2
 	
 	def move(self, some):
+		return 1
 		to_step = False
+		
 		if self.parent.collision_manager.objs_colliding(self):
 			for i in self.parent.collision_manager.objs_colliding(self):
 				if i!=self and isinstance(i,Zoombie):
@@ -57,6 +59,7 @@ class Zoombie(Char):
 		#else: pass
 	
 	def step_aside(self,obj):
+			return 1
 			self.stepping_aside = True
 			x = (self.position[0]-obj.position[0])
 			y = (self.position[1]-obj.position[1])
@@ -64,17 +67,18 @@ class Zoombie(Char):
 			self.update_cshape()
 	
 	def hit(self, target):		
+		return 1
 		target.hurt()
 		
 	def hunt(self):
 		if not self.victim:
 			print "nothing to hunt"
 		else:
-			self.schedule(self.look_to_victim)
+			self.schedule_interval(self.look_to_victim,0.1)
 			#self.look_to_victim(False)
 	
 	def die(self):
-		self.parent.score_text.element.text=str(int(self.parent.score_text.element.text)+1)
+		self.parent.parent.get('hud').score_text.element.text=str(int(self.parent.parent.get('hud').score_text.element.text)+1)
 		self.unschedule(self.look_to_victim)
 		self.parent.add(cocos.sprite.Sprite(pic,self.position,randint(1,360),5,100),1)
 		#self.image = pyglet.image.load('zoombie_dead.png')
@@ -82,9 +86,13 @@ class Zoombie(Char):
 			Zombiing(self.parent,self.victim)
 		Char.die(self)
 		
+	
 		
 		
 	def look_to_victim(self,some):
+		print self.parent.parent.get_rect()
+		#print self.x
+		#return 1
 		a = list(self.position)
 		b = list(self.victim.position)
 		
